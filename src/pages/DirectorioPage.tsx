@@ -15,11 +15,12 @@ export default function DirectorioPage() {
   const { user, clearSession } = useAuthStore()
   const queryClient = useQueryClient()
   const [searchParams, setSearchParams] = useSearchParams()
-  const [inputValue, setInputValue] = useState(searchParams.get("q") ?? "")
 
   const rawPage = parseInt(searchParams.get("page") ?? "1")
   const page = isNaN(rawPage) || rawPage < 1 ? 1 : rawPage
   const q = searchParams.get("q") ?? ""
+
+  const [inputValue, setInputValue] = useState(q)
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["empleados", page, q],
@@ -29,7 +30,7 @@ export default function DirectorioPage() {
 
   const deleteMutation = useMutation({
     mutationFn: deleteEmpleado,
-       onSuccess: () => {
+    onSuccess: () => {
       toast.success("Empleado eliminado (simulado).")
       queryClient.invalidateQueries({ queryKey: ["empleados"] })
     },
@@ -38,11 +39,24 @@ export default function DirectorioPage() {
   const totalPages = data ? Math.ceil(data.total / 8) : 1
 
   const handleSearch = () => {
-    setSearchParams({ q: inputValue, page: "1" })
+    const trimmed = inputValue.trim()
+    if (trimmed) {
+      setSearchParams({ q: trimmed, page: "1" })
+    } else {
+      setSearchParams({ page: "1" })
+    }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") handleSearch()
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setInputValue(val)
+    if (val === "") {
+      setSearchParams({ page: "1" })
+    }
   }
 
   const handleDelete = (id: number, nombre: string) => {
@@ -59,7 +73,6 @@ export default function DirectorioPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Encabezado */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div>
@@ -73,12 +86,11 @@ export default function DirectorioPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        {/* Barra de búsqueda y botón nuevo */}
         <div className="flex flex-col sm:flex-row gap-2">
           <Input
             placeholder="Buscar"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             className="max-w-sm"
           />
@@ -88,10 +100,8 @@ export default function DirectorioPage() {
           </div>
         </div>
 
-        {/* Estado de carga */}
         {isLoading && <p className="text-center py-8">Cargando…</p>}
 
-        {/* Error */}
         {isError && (
           <Alert className="border-destructive">
             <AlertDescription className="flex items-center justify-between gap-4">
@@ -103,7 +113,6 @@ export default function DirectorioPage() {
           </Alert>
         )}
 
-        {/* Resultados de búsqueda */}
         {!isLoading && !isError && q && (
           <p className="text-sm text-muted-foreground">
             {data?.total === 0
@@ -112,7 +121,6 @@ export default function DirectorioPage() {
           </p>
         )}
 
-        {/* Cuadrícula */}
         {!isLoading && !isError && data && data.users.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {data.users.map((emp) => (
@@ -125,7 +133,6 @@ export default function DirectorioPage() {
           </div>
         )}
 
-        {/* Paginación */}
         {!isLoading && !isError && totalPages > 1 && (
           <div className="flex items-center justify-center gap-4">
             <Button

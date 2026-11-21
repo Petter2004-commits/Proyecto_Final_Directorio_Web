@@ -33,8 +33,17 @@ export default function LoginPage() {
   const onSubmit = async (data: FormData) => {
     try {
       const session = await login(data.username, data.password)
-      setSession(session.user, session.accessToken, session.refreshToken)
-      navigate("/empleados")
+setSession(
+  {
+    id: session.id,
+    firstName: session.firstName,
+    lastName: session.lastName,
+    email: session.email,
+    image: session.image,
+  },
+  session.accessToken,
+  session.refreshToken
+)
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 400) {
         setError("root", { message: "Usuario o contraseña incorrectos." })
