@@ -1,32 +1,59 @@
-# React + TypeScript + Vite
+# Directorio de Empleados
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Proyecto de recuperación — Curso 036 Desarrollo Web  
+Universidad Mariano Gálvez de Guatemala  
+Estudiante: Petter Deiman Alvarez Garcia
 
-Currently, two official plugins are available:
+Aplicación web para gestionar el directorio de empleados de una empresa. Permite iniciar sesión, ver el listado paginado, buscar por nombre, ver el detalle de cada empleado, descargar su fotografía y ficha, agregar nuevos empleados y darlos de baja. Los datos provienen de la API pública DummyJSON.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tecnologías
 
-## React Compiler
+- React 19 + TypeScript
+- Vite
+- Tailwind CSS
+- shadcn/ui (Radix UI)
+- React Router DOM
+- Zustand (persistencia de sesión)
+- TanStack Query
+- Axios
+- React Hook Form + Zod
+- React Hot Toast
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Instalación y ejecución
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Variables de entorno
+
+Copia `.env.example` a `.env` y ajusta si es necesario:
+
+```
+VITE_API_URL=https://dummyjson.com
+```
+
+## Sitio desplegado
+
+https://proyecto-final-directorio-web.vercel.app
+
+## Capturas de pantalla
+
+### Inicio de sesión con credenciales incorrectas
+![Login error](capturas/01-login-error.png)
+
+### Directorio con paginación
+![Directorio](capturas/02-directorio.png)
+
+### Búsqueda con resultados
+![Búsqueda](capturas/03-busqueda.png)
+
+### Detalle de empleado
+![Detalle](capturas/04-detalle.png)
+
+### Formulario con error de validación
+![Formulario](capturas/05-formulario-error.png)
+
+### Tarjeta de error con Reintentar
+![Error](capturas/06-error-red.png)

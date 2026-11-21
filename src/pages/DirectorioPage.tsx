@@ -26,6 +26,7 @@ export default function DirectorioPage() {
     queryKey: ["empleados", page, q],
     queryFn: () => q ? searchEmpleados(q, page) : getEmpleados(page),
     placeholderData: (prev) => prev,
+    retry: false,
   })
 
   const deleteMutation = useMutation({

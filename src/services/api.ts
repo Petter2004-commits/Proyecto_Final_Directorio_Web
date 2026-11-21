@@ -6,7 +6,6 @@ const baseURL = import.meta.env.VITE_API_URL ?? "https://dummyjson.com"
 
 export const api = axios.create({ baseURL })
 
-// Agrega el token en cada petición
 api.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken
   if (token) {
@@ -15,13 +14,17 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// Renueva el token ante 401
 let isRefreshing = false
 
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const original = error.config
+
+    // Si no hay respuesta es error de red — no intentar renovar
+    if (!error.response) {
+      return Promise.reject(error)
+    }
 
     if (error.response?.status === 401 && !original._retry && !isRefreshing) {
       original._retry = true
