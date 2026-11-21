@@ -30,9 +30,18 @@ export default function DirectorioPage() {
 
   const deleteMutation = useMutation({
     mutationFn: deleteEmpleado,
-    onSuccess: () => {
+    onSuccess: (_, deletedId) => {
       toast.success("Empleado eliminado (simulado).")
-      queryClient.invalidateQueries({ queryKey: ["empleados"] })
+      queryClient.setQueriesData(
+        { queryKey: ["empleados"] },
+        (old: { users: { id: number }[], total: number, skip: number, limit: number } | undefined) => {
+          if (!old) return old
+          return {
+            ...old,
+            users: old.users.filter((u) => u.id !== deletedId),
+          }
+        }
+      )
     },
   })
 
